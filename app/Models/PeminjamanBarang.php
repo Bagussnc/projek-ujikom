@@ -17,6 +17,7 @@ class PeminjamanBarang extends Model
     protected $fillable = [
         'pbd_id',
         'pb_id',
+        'siswa_id',
         'br_kode',
         'pdb_tgl',
         'pdb_sts',

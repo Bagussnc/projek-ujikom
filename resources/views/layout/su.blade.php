@@ -30,6 +30,7 @@
 
         #submenu-inventaris,
         #submenu-laporan,
+        #submenu-peminjaman,
         #submenu-referensi {
             max-height: 0;
             overflow: hidden;
@@ -38,6 +39,7 @@
 
         #submenu-inventaris.open,
         #submenu-laporan.open,
+        #submenu-peminjaman.open,
         #submenu-referensi.open {
             max-height: 500px;
             /* Sesuaikan dengan tinggi konten */
@@ -49,11 +51,11 @@
     <div class="flex h-screen overflow-hidden">
         <!-- Sidebar -->
         <nav class="bg-indigo-600 w-full md:w-64 text-white flex flex-col h-screen">
-            <div class="p-4 text-center text-2xl font-bold border-b border-indigo-500">Inventory System</div>
+            <div class="p-5 text-center text-2xl font-bold border-b border-indigo-500">Inventory System</div>
             <ul class="flex-1 mt-4 overflow-y-auto">
             <li class="py-2 px-4 hover:bg-indigo-700 transition-all">
-                    <a href="/super-user/dashboard" class="flex items-center space-x-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <a href="/super-user/dashboard" class="flex items-center space-x-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" viewBox="0 0 20 20" fill="currentColor">
                             <path
                                 d="M10 2.707L2.707 10H5v5a1 1 0 001 1h3v-3h2v3h3a1 1 0 001-1v-5h2.293L10 2.707z" />
                             </svg>
@@ -153,8 +155,11 @@
                         <li class="py-2 px-4 hover:bg-indigo-800 transition-all">
                             <a href="/super-user/jenis-barang">Jenis Barang</a>
                         </li>
-                        <li class="py-2 px-4 hover:bg-indigo-800 transition-all">
+                        <!-- <li class="py-2 px-4 hover:bg-indigo-800 transition-all">
                             <a href="/super-user/daftar-pengguna">Daftar Pengguna</a>
+                        </li> -->
+                        <li class="py-2 px-4 hover:bg-indigo-800 transition-all">
+                            <a href="{{route('superuser.siswa.index')}}">Siswa</a>
                         </li>
                     </ul>
                 </li>
@@ -163,16 +168,15 @@
 
         <!-- Main Content -->
         <div class="flex-1 flex flex-col h-screen overflow-auto">
-            <header class="bg-white shadow p-4 flex items-center justify-end">
+            <header class="bg-indigo-600 shadow p-4 flex items-center justify-end">
                 <div class="flex items-center space-x-4">
                     <button class="text-gray-500 focus:outline-none">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none"
                             stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M15 17h5l-1.405-1.405a2.032 2.032 0 00-.595-1.395L16 12m-6 5l-4-4 1.405-1.405c.367-.367.911-.53 1.395-.595L12 10" />
+                            
                         </svg>
                     </button>
-                    <img src="https://via.placeholder.com/40" alt="Profile" class="w-10 h-10 rounded-full">
+                    <img src="https://i.pinimg.com/736x/17/7d/6c/177d6c46263714608fd3d09c7e5be272.jpg" alt="Profile" class="w-10 h-10 rounded-full">
                 </div>
             </header>
             @yield('content')

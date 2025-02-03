@@ -1,24 +1,26 @@
 @extends('layout.su')
 
 @section('content')
-    <div class="container mx-auto py-8 px-4">
-
-        <!-- Form Penerimaan Barang -->
-        <div class="bg-gradient-to-r from-indigo-500 to-blue-500 p-8 shadow-xl rounded-lg w-full mb-8">
-            <h2 class="text-3xl font-bold mb-6 text-white text-center">Form Penerimaan Barang</h2>
-            <form action="{{ route('superuser.barangStore') }}" method="POST"
-                class="space-y-6 bg-white p-6 rounded-lg shadow-md">
+<div class="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-100 to-purple-100 p-8">
+    <div class="w-full max-w-lg mx-auto">
+        <div class="bg-white rounded-lg shadow-xl overflow-hidden">
+            <div class="bg-gradient-to-r from-indigo-500 to-purple-600 p-6 text-center">
+                <h2 class="text-xl font-bold text-white">Form Penerimaan Barang</h2>
+            </div>
+            
+            <form action="{{ route('superuser.barangStore') }}" method="POST" class="p-8 space-y-6">
                 @csrf
                 <div>
-                    <label for="nama" class="block text-gray-700 text-sm font-semibold">Nama Barang</label>
-                    <input type="text" id="nama" name="nama"
-                        class="w-full border-2 border-gray-300 rounded-md px-4 py-2 text-gray-700 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                    <label for="nama" class="block text-sm font-medium text-gray-700">Nama Barang</label>
+                    <input type="text" id="nama" name="nama" 
+                        class="w-full px-4 py-3 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none" 
                         placeholder="Masukkan nama barang" required>
                 </div>
+                
                 <div>
-                    <label for="kategori" class="block text-gray-700 text-sm font-semibold">Kategori</label>
-                    <select id="kategori" name="kategori" required
-                        class="w-full border-2 border-gray-300 rounded-md px-4 py-2 text-gray-700 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                    <label for="kategori" class="block text-sm font-medium text-gray-700">Kategori</label>
+                    <select id="kategori" name="kategori" required 
+                        class="w-full px-4 py-3 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none">
                         <option value="">Pilih Kategori</option>
                         @if (isset($jenisBarang) && $jenisBarang->count())
                             @foreach ($jenisBarang as $kategori)
@@ -29,13 +31,25 @@
                         @endif
                     </select>
                 </div>
-                <div class="flex justify-end">
-                    <button type="submit"
-                        class="bg-indigo-600 text-white font-semibold px-6 py-2 rounded-lg hover:bg-indigo-700 transition duration-200">
+                
+                <div>
+                    <label for="br_status" class="block text-sm font-medium text-gray-700">Status</label>
+                    <select id="br_status" name="br_status" required 
+                        class="w-full px-4 py-3 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                        <option value="1">Barang Baik</option>
+                        <option value="2">Barang Kurang Baik</option>
+                        <option value="3">Barang Rusak</option>
+                    </select>
+                </div>
+                
+                <div class="pt-6">
+                    <button type="submit" 
+                        class="w-full bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-bold py-3 rounded-lg hover:opacity-90 transition duration-300 ease-in-out shadow-md text-sm">
                         Simpan
                     </button>
                 </div>
             </form>
         </div>
     </div>
+</div>
 @endsection

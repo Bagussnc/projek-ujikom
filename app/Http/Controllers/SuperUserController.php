@@ -8,9 +8,6 @@ use Illuminate\Http\Request;
 
 class SuperUserController extends Controller
 {
-    public function index(){
-        return view('super_user.dashboard');
-    }
 
     public function jumlahBarang()
     {

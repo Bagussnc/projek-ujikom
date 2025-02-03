@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -16,10 +17,12 @@ class Peminjaman extends Model
 
     protected $casts = [
         'pb_tgl' => 'datetime',
-        'pb_harus_kembali_tgl' => 'datetime', 
+        'pb_harus_kembali_tgl' => 'datetime',
     ];
     protected $fillable = [
         'pb_id',
+        'pb_tgl',
+        'pb_harus_kembali_tgl',
         'user_id',
         'siswa_id',
         'pb_stat',

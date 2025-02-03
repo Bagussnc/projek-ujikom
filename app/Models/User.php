@@ -10,8 +10,11 @@ class User extends Authenticatable
 {
     use HasFactory;
 
-    protected $table = 'tm_user'; 
+    protected $table = 'tm_user';
     protected $primaryKey = 'user_id';
+    public $incrementing = false;
+    protected $keyType = 'string';
+
 
     protected $fillable = [
         'user_nama',
