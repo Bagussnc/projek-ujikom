@@ -2,6 +2,21 @@
 
 @section('content')
 <main class="flex-1 p-6 bg-gray-50">
+
+    <style>
+        #barangList {
+            max-height: 173px; /* Menampilkan hanya 4 item, sisanya bisa di-scroll */
+            overflow-y: auto;
+            display: block;
+        }
+        #selectedItems {
+            max-height: 173px; /* Batasi tinggi daftar */
+            overflow-y: auto;  /* Tambahkan scroll jika penuh */
+            min-height: 50px; /* Supaya tetap terlihat meskipun kosong */
+        }
+    </style>
+
+
     <div class="container mx-auto py-8">
         <!-- Alert jika ada error -->
         @if ($errors->any())
@@ -13,6 +28,13 @@
             </ul>
         </div>
         @endif
+
+
+
+        <!-- Tombol untuk Membuka Modal -->
+        <button id="openModalBtn" class="bg-indigo-600 text-white px-6 py-3 rounded-lg shadow-lg hover:bg-indigo-700 mb-4">
+            Form Peminjaman
+        </button>
 
         <!-- Daftar Peminjaman -->
         <div class="bg-white shadow-lg rounded-lg p-6 mb-8">
@@ -29,31 +51,25 @@
                 </thead>
                 <tbody>
                     @foreach ($peminjaman as $pinjam)
-                    @foreach ($pinjam->peminjamanBarang as $barangPinjam)
                     <tr class="border-b">
                         <td class="px-4 py-2">{{ $pinjam->pb_tgl->format('d-m-Y') }}</td>
                         <td class="px-4 py-2">{{ $pinjam->siswa->nama_siswa }}</td>
-                        <td class="px-4 py-2">{{ $barangPinjam->barangInventaris->br_nama }}</td>
+                        <td class="px-4 py-2">
+                            {{ $pinjam->peminjamanBarang->pluck('barangInventaris.br_nama')->join(', ') }}
+                        </td>
                         <td class="px-4 py-2">{{ $pinjam->pb_harus_kembali_tgl->format('d-m-Y') }}</td>
                         <td class="px-4 py-2">
                             @if ($pinjam->pb_stat === '1')
                             <span class="text-green-600">Peminjaman Aktif</span>
                             @else
-                            <span class="text-gray-600">Selesai</span>
+                            <span class="text-gray-600">Peminjaman Selesai</span>
                             @endif
                         </td>
                     </tr>
                     @endforeach
-                    @endforeach
                 </tbody>
-
             </table>
         </div>
-
-        <!-- Tombol untuk Membuka Modal -->
-        <button id="openModalBtn" class="bg-indigo-600 text-white px-6 py-3 rounded-lg shadow-lg hover:bg-indigo-700">
-            Form Peminjaman
-        </button>
 
         <!-- Modal Form Peminjaman -->
         <div id="modalForm" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center hidden">
@@ -70,21 +86,28 @@
                             @endforeach
                         </select>
                     </div>
-
                     <div class="mb-4">
-                        <label for="br_kode" class="block text-sm font-semibold text-gray-700">Nama Barang</label>
-                        <select name="br_kode" id="br_kode" class="w-full p-2 border rounded">
+                        <label class="block text-sm font-semibold text-gray-700">Pilih Barang</label>
+                        <ul id="barangList" class="border p-2 rounded bg-gray-100">
                             @foreach ($barang as $item)
-                            <option value="{{ $item->br_kode }}">{{ $item->br_nama }}</option>
+                            <li class="flex items-center justify-between p-2 bg-white rounded shadow mb-2">
+                                <span>{{ $item->br_nama }}</span>
+                                <button type="button" class="toggle-item bg-green-500 text-white px-3 py-1 rounded" data-id="{{ $item->br_kode }}" data-name="{{ $item->br_nama }}">+</button>
+                            </li>
                             @endforeach
-                        </select>
+                        </ul>
                     </div>
-
+                    <div class="mb-4">
+                        <label class="block text-sm font-semibold text-gray-700">Barang yang Dipilih</label>
+                        <ul id="selectedItems" class="border p-2 rounded bg-gray-100"></ul>
+                        <div id="hiddenInputsContainer">
+                            <input type="hidden" name="br_kode[]" id="barangDipilihInput">
+                        </div>
+                    </div>
                     <div class="mb-4">
                         <label for="pb_tgl" class="block text-sm font-semibold text-gray-700">Tanggal Peminjaman</label>
                         <input type="date" name="pb_tgl" id="pb_tgl" class="w-full p-2 border rounded" required>
                     </div>
-
                     <button type="submit" class="bg-indigo-600 text-white px-6 py-2 rounded-lg">Pinjam Barang</button>
                 </form>
             </div>
@@ -93,6 +116,77 @@
 </main>
 
 <script>
+     document.getElementById('openModalBtn').addEventListener('click', function() {
+        document.getElementById('modalForm').classList.remove('hidden');
+    });
+
+    document.getElementById('closeModalBtn').addEventListener('click', function() {
+        document.getElementById('modalForm').classList.add('hidden');
+    });
+
+    document.addEventListener('click', function(e) {
+        if (e.target === document.getElementById('modalForm')) {
+            document.getElementById('modalForm').classList.add('hidden');
+        }
+    });
+
+    function updateHiddenInput() {
+        let selectedItems = document.querySelectorAll('#selectedItems li');
+        let selectedIds = Array.from(selectedItems).map(item => item.getAttribute('data-id'));
+
+        console.log(selectedIds)
+
+        let inputContainer = document.getElementById('hiddenInputsContainer');
+        inputContainer.innerHTML = ''; // Kosongkan dulu
+
+        if (selectedIds.length > 0) {
+            selectedIds.forEach(id => {
+                let input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'br_kode[]'; // Array input
+                input.value = id;
+                inputContainer.appendChild(input);
+            });
+        } else {
+            let input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'br_kode[]';
+            input.value = ''; // Pastikan ada input kosong jika tidak ada barang dipilih
+            inputContainer.appendChild(input);
+        }
+    }
+
+    document.querySelectorAll('.toggle-item').forEach(button => {
+        button.addEventListener('click', function() {
+            let id = this.getAttribute('data-id');
+            let name = this.getAttribute('data-name');
+            let selectedList = document.getElementById('selectedItems');
+
+            if (this.innerText === '+') {
+                let newItem = document.createElement('li');
+                newItem.classList.add('flex', 'items-center', 'justify-between', 'p-2', 'bg-white', 'rounded', 'shadow', 'mb-2');
+                newItem.setAttribute('data-id', id);
+                newItem.innerHTML = `<span>${name}</span>`;
+                selectedList.appendChild(newItem);
+                this.innerText = '-';
+                this.classList.replace('bg-green-500', 'bg-red-500');
+            } else {
+                let items = selectedList.querySelectorAll('li');
+                items.forEach(item => {
+                    if (item.getAttribute('data-id') === id) {
+                        item.remove();
+                    }
+                });
+                this.innerText = '+';
+                this.classList.replace('bg-red-500', 'bg-green-500');
+            }
+
+            updateHiddenInput(); // 🔥 Pastikan input hidden diperbarui setiap kali item dipilih
+        });
+    });
+
+
+
     const openModalBtn = document.getElementById('openModalBtn');
     const closeModalBtn = document.getElementById('closeModalBtn');
     const modalForm = document.getElementById('modalForm');

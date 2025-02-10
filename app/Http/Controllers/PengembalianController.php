@@ -8,6 +8,7 @@ use App\Models\BarangInventaris;
 use App\Models\Pengembalian;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class PengembalianController extends Controller
 {
@@ -40,12 +41,12 @@ class PengembalianController extends Controller
 
         try {
             DB::beginTransaction();
-
+            $user = Auth::user();
             // Simpan data pengembalian
             $pengembalian = new Pengembalian();
             $pengembalian->kembali_id = 'KB' . strtoupper(uniqid());
             $pengembalian->pb_id = $request->pb_id;
-            $pengembalian->user_id = auth()->id(); // User yang melakukan pengembalian
+            $pengembalian->user_id = $user->user_id; // User yang melakukan pengembalian
             $pengembalian->kembali_tgl = $request->kembali_tgl;
             $pengembalian->kembali_sts = '0'; // Status "02" untuk dikembalikan
             $pengembalian->save();
@@ -64,7 +65,7 @@ class PengembalianController extends Controller
 
             DB::commit();
 
-            return redirect()->route('superuser.formPengembalian')->with('success', 'Pengembalian barang berhasil disimpan!');
+            return redirect()->route('superuser.peminjamanBarang')->with('success', 'Pengembalian barang berhasil disimpan!');
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->withErrors('Terjadi kesalahan: ' . $e->getMessage());

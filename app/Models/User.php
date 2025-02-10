@@ -23,6 +23,18 @@ class User extends Authenticatable
         'user_sts',
     ];
 
+    protected $hidden = [
+        'user_pass'
+    ];
+
+    protected function casts(): array
+{
+    return [
+        'user_id' => 'string',
+'user_pass' => 'hashed'
+    ];
+}
+
     public $timestamps = false;
 
     public function getAuthPassword()

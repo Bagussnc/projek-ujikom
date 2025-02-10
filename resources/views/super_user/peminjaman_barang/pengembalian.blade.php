@@ -5,6 +5,15 @@
         <div class="w-full max-w-2xl mx-auto">
             <div class="bg-white rounded-2xl shadow-2xl overflow-hidden">
                 <div class="bg-gradient-to-r from-blue-500 to-purple-600 p-8 text-center">
+                    @if ($errors->any())
+                    <div class="alert alert-danger border-left-danger" role="alert">
+                        <ul class="pl-4 my-2">
+                            @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                    @endif
                     <h2 class="text-4xl font-bold text-white tracking-tight">Pengembalian Barang</h2>
                 </div>
                 
@@ -18,8 +27,8 @@
                             <option value="" disabled selected>-- Pilih Peminjaman --</option>
                             @foreach ($peminjaman as $item)
                                 <option value="{{ $item->pb_id }}">
-                                    {{ $item->siswa->nama_siswa }} -
-                                    {{ $item->peminjamanBarang[0]->barangInventaris->br_nama ?? 'Barang Tidak Ditemukan' }}
+                                    {{ $item->siswa->nama_siswa }} - 
+                                    {{ $item->peminjamanBarang->pluck('barangInventaris.br_nama')->join(', ') ?: 'Barang Tidak Ditemukan' }}
                                 </option>
                             @endforeach
                         </select>

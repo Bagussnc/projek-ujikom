@@ -166,22 +166,35 @@
             </ul>
         </nav>
 
-        <!-- Main Content -->
-        <div class="flex-1 flex flex-col h-screen overflow-auto">
-            <header class="bg-indigo-600 shadow p-4 flex items-center justify-end">
-                <div class="flex items-center space-x-4">
-                    <button class="text-gray-500 focus:outline-none">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2">
-                            
-                        </svg>
-                    </button>
-                    <img src="https://i.pinimg.com/736x/17/7d/6c/177d6c46263714608fd3d09c7e5be272.jpg" alt="Profile" class="w-10 h-10 rounded-full">
-                </div>
-            </header>
-            @yield('content')
+<!-- Main Content -->
+<div class="flex-1 flex flex-col h-screen overflow-auto">
+    <header class="bg-indigo-600 shadow p-4 flex items-center justify-end">
+        <div class="flex items-center space-x-4">
+            <!-- Ikon tambahan -->
+            <button class="text-gray-100 focus:outline-none">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2L12 22M2 12L22 12"></path>
+                </svg>
+            </button>
+
+            <!-- Form Logout -->
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
+                @csrf
+            </form>
+
+            <button onclick="document.getElementById('logout-form').submit();" class="bg-red-500 text-white px-4 py-2 rounded flex items-center space-x-2 hover:bg-red-600 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M17 16l4-4m0 0l-4-4m4 4H9"></path>
+                    <path d="M13 19H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h8"></path>
+                </svg>
+                <span>Logout</span>
+            </button>
         </div>
-    </div>
+    </header>
+
+    @yield('content')
+</div>
+
 
     <!-- Add Custom JS -->
     <script src="{{ asset('js/app.js') }}"></script>

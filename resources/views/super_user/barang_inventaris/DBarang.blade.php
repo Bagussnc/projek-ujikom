@@ -33,7 +33,7 @@
                                     @elseif ($item->br_status == 3)
                                         Barang Rusak
                                     @else
-                                        Tidak Diketahui
+                                        Sedang Di Pinjam
                                     @endif
                                 </span>
                             </td>

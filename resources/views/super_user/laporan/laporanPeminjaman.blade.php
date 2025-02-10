@@ -39,6 +39,7 @@
                             Terlambat</option>
                     </select>
                 </div>
+                
                 <!-- Tombol Cari -->
                 <div class="flex justify-center sm:col-span-3 mt-6">
                     <button type="submit"
@@ -50,10 +51,11 @@
         </div>
 
         <!-- Laporan Table -->
+        <div class="p-6 bg-gray-100">,
         <div class="bg-white shadow-lg rounded-lg p-8">
-            <h2 class="text-2xl font-semibold text-gray-800 mb-6">Hasil Laporan Peminjaman</h2>
             <div class="overflow-x-auto">
-                <table class="min-w-full bg-white border border-gray-200">
+                <button onclick="printTable()" class="bg-indigo-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none transition duration-300 transform hover:scale-105 hover:shadow-lg mb-4">Print Laporan</button>
+                <table id="laporanTable" class="min-w-full bg-white border border-gray-200">
                     <thead>
                         <tr class="bg-gray-100 border-b">
                             <th class="text-left px-6 py-3 text-sm font-semibold text-gray-700">No</th>
@@ -66,23 +68,33 @@
                     </thead>
                     <tbody>
                         @foreach ($peminjamanData as $index => $peminjaman)
-                            @foreach ($peminjaman->peminjamanBarang as $barang)
-                                <tr class="border-b">
-                                    <td class="px-6 py-4 text-sm text-gray-600">{{ $index + 1 }}</td>
-                                    <td class="px-6 py-4 text-sm text-gray-600">{{ $peminjaman->siswa->nama_siswa }}</td>
-                                    <td class="px-6 py-4 text-sm text-gray-600">{{ $barang->barangInventaris->br_nama }}
-                                    </td>
-                                    <td class="px-6 py-4 text-sm text-gray-600">{{ $peminjaman->pb_tgl->format('Y-m-d') }}
-                                    </td>
-                                    <td class="px-6 py-4 text-sm text-gray-600">
-                                        {{ $peminjaman->pb_harus_kembali_tgl->format('Y-m-d') }}</td>
-                                    <td class="px-6 py-4 text-sm text-gray-600">{{ $peminjaman->pb_stat }}</td>
-                                </tr>
-                            @endforeach
+                            <tr class="border-b">
+                                <td class="px-6 py-4 text-sm text-gray-600">{{ $index + 1 }}</td>
+                                <td class="px-6 py-4 text-sm text-gray-600">{{ $peminjaman->siswa->nama_siswa }}</td>
+                                <td class="px-6 py-4 text-sm text-gray-600">
+                                    {{ $peminjaman->peminjamanBarang->pluck('barangInventaris.br_nama')->join(', ') }}
+                                </td>
+                                <td class="px-6 py-4 text-sm text-gray-600">{{ $peminjaman->pb_tgl->format('Y-m-d') }}</td>
+                                <td class="px-6 py-4 text-sm text-gray-600">{{ $peminjaman->pb_harus_kembali_tgl->format('Y-m-d') }}</td>
+                                <td class="px-6 py-4 text-sm text-gray-600">
+                                    {{ $peminjaman->pb_stat == 1 ? 'Belum Dikembalikan' : 'Sudah Dikembalikan' }}
+                                </td>
+                            </tr>
                         @endforeach
                     </tbody>
                 </table>
             </div>
         </div>
+    </div>
+
+    <script>
+        function printTable() {
+            let tableContent = document.getElementById('laporanTable').outerHTML;
+            let originalContent = document.body.innerHTML;
+            document.body.innerHTML = tableContent;
+            window.print();
+            document.body.innerHTML = originalContent;
+        }
+    </script>
     </div>
 @endsection

@@ -18,7 +18,7 @@ class UserSeeder extends Seeder
     {
         DB::table('tm_user')->insert([
             [
-                'user_id' => Str::random(10),
+                'user_id' => 'U001',
                 'user_nama' => 'admin',
                 'user_pass' => Hash::make('password123'),
                 'user_hak' => 'admin',
@@ -27,7 +27,7 @@ class UserSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'user_id' => Str::random(10),
+                'user_id' => 'U002',
                 'user_nama' => 'superuser',
                 'user_pass' => Hash::make('password123'),
                 'user_hak' => 'su',

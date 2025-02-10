@@ -11,8 +11,17 @@ use App\Http\Controllers\PengembalianController;
 use App\Http\Controllers\ReferensiController;
 use App\Http\Controllers\SiswaController;
 use App\Http\Controllers\UserController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
 
 Route::get('/login', [AuthController::class, 'showLogin']);
+Route::post('/logout', function (Request $request) {
+    Auth::logout();
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
+    return redirect('/login');
+})->name('logout');
 
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::prefix('super-user')->name('superuser.')->group(function () {
@@ -45,4 +54,6 @@ Route::prefix('super-user')->name('superuser.')->group(function () {
     Route::get('/siswa', [SiswaController::class, 'index'])->name('siswa.index');
     Route::get('/siswa/create', [SiswaController::class, 'create'])->name('siswa.create');
     Route::post('/siswa', [SiswaController::class, 'store'])->name('siswa.store'); 
+
+    
 });
